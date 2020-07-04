@@ -140,6 +140,25 @@ public class LLAdyacencia {
         return lista.length;
     }
 
-
+    public void eliminarVector(int vector){
+        NodoLLA[] nuevaLista= new NodoLLA[lista.length-1];
+        int k=1;
+        for (int i=1;i<lista.length;i++){
+            if (i!=vector){
+                NodoLLA q=lista[i];
+                NodoLLA p=lista[i].getLiga();
+                while (p!=null){
+                    if (p.getVertice()==vector){
+                        q.setLiga(p.getLiga());
+                    }
+                    q=p;
+                    p=p.getLiga();
+                }
+                nuevaLista[k] =lista[i];
+                k++;
+            }
+        }
+        lista=nuevaLista;
+    }
 
 }

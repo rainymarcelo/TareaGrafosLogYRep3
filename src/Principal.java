@@ -33,7 +33,8 @@ public class Principal {
                     LLAdyacencia listaLigada = new LLAdyacencia(tamano);
 
                     for (int i = 1; i <= cantidadLados; i++) {
-                        String dato = JOptionPane.showInputDialog("ingrese el lado #" + i + " (separe los vertices de salida y llegada por una coma)");
+                        String dato = JOptionPane.showInputDialog("ingrese el lado #" + i + " (separe los vertices de salida y llegada por una coma) \n" +
+                                "ejemplo:1,2");
                         String[] lado = dato.split(",");
                         if (lado.length<2){
                             JOptionPane.showMessageDialog(null,"Escribio mal las coordenadas del lado");
@@ -90,7 +91,7 @@ public class Principal {
                     grafos[grafoBFS].resetVisitados();
                     break;
 
-                case "5":
+                case "5"://añadir un vertice
                     mostrar = "Seleccione el grafo al cual quiere agregar un vertice\n";
                     for (int i = 1; i < grafos.length; i++) {
                         if (grafos[i] != null) {
@@ -120,6 +121,28 @@ public class Principal {
                     JOptionPane.showMessageDialog(null,grafos[agregarVertice].mostrarGrafoMatriz());
 
                     break;
+
+                case"6"://eliminar vertice
+                    mostrar = "Seleccione el grafo al cual quiere agregar un vertice\n";
+                    for (int i = 1; i < grafos.length; i++) {
+                        if (grafos[i] != null) {
+                            mostrar += "grafo #" + i + "\n" + grafos[i].mostrarGrafoMatriz() + "\n";
+                        }
+                    }
+                    int eliminarVertice = Integer.parseInt(JOptionPane.showInputDialog(mostrar));
+                    int vectirEliminado=Integer.parseInt((JOptionPane.showInputDialog("Escribo cual vertice desea eliminar:")));
+
+                    if (vectirEliminado>grafos[eliminarVertice].tamanoGrafo()){
+                        JOptionPane.showMessageDialog(null,"El vector que desea eliminar no existe");
+                        break;
+                    }
+
+                    grafos[eliminarVertice].eliminarVector(vectirEliminado);
+
+                    JOptionPane.showMessageDialog(null,grafos[eliminarVertice].mostrarGrafoMatriz());
+
+                    break;
+
             }
 
         } while (!opcion1.equals("11"));
