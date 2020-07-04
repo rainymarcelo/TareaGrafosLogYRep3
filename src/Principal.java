@@ -27,6 +27,25 @@ public class Principal {
 
                 case "1"://construlle un grafo
 
+                    int escoger=Integer.parseInt(JOptionPane.showInputDialog("1. Grafo no dirigido\n" +
+                            "2. Grafo dirigido"));
+
+                    do {
+                        switch (escoger){
+                            case 1:
+
+
+                                escoger=100;
+                                break;
+
+                            case 2:
+
+                                escoger=100;
+                                break;
+                        }
+
+                    }while (escoger!=100);
+
                     int tamano = Integer.parseInt(JOptionPane.showInputDialog("Ingrese la cantidad de vectores que posee el grafo:"));
                     int cantidadLados = Integer.parseInt(JOptionPane.showInputDialog("Cantidad de lados a ingresar:"));
 
@@ -143,6 +162,45 @@ public class Principal {
 
                     break;
 
+                case"7"://eliminar lado
+                    mostrar = "Seleccione el grafo al cual quiere agregar un vertice\n";
+                    for (int i = 1; i < grafos.length; i++) {
+                        if (grafos[i] != null) {
+                            mostrar += "grafo #" + i + "\n" + grafos[i].mostrarGrafoMatriz() + "\n";
+                        }
+                    }
+                    int eliminaLado = Integer.parseInt(JOptionPane.showInputDialog(mostrar));
+                    String ladoEliminado=JOptionPane.showInputDialog("Ingrese el lado a eliminar(separe los vertices con una coma)");
+                    String[] datoEliminado=ladoEliminado.split(",");
+                    int eliminado=Integer.parseInt(datoEliminado[0]);
+                    int eliminado1=Integer.parseInt(datoEliminado[1]);
+                    int tamanoElimiar=grafos[eliminaLado].tamanoGrafo();
+                    if (eliminado>tamanoElimiar || eliminado1>tamanoElimiar){
+                        JOptionPane.showMessageDialog(null,"uno de los vectores ingresados no existe");
+                        break;
+                    }
+                    if (tamanoElimiar<2){
+                        JOptionPane.showMessageDialog(null,"Escribio mal las coordenadas del lado");
+                        break;
+                    }
+                    grafos[eliminaLado].eliminarLadoNoDirigido(eliminado,eliminado1);
+
+                    JOptionPane.showMessageDialog(null,grafos[eliminaLado].mostrarGrafoMatriz());
+
+                    break;
+
+                case"8"://construir y mostrar el spaning tree
+
+                    break;
+
+                case "9":
+                    break;
+
+                case "10":
+                    break;
+
+                case "11":
+                    break;
             }
 
         } while (!opcion1.equals("11"));

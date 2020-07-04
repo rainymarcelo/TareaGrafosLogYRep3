@@ -161,4 +161,18 @@ public class LLAdyacencia {
         lista=nuevaLista;
     }
 
+    public void eliminarLadoNoDirigido(int salida,int llegada){
+        NodoLLA q=lista[salida];
+        NodoLLA p=lista[salida].getLiga();
+        while (p!=null){
+            if (p.getVertice()==llegada){
+                q.setLiga(p.getLiga());
+                eliminarLadoNoDirigido(llegada,salida);
+                return;
+            }
+            q=p;
+            p=p.getLiga();
+        }
+    }
+
 }
