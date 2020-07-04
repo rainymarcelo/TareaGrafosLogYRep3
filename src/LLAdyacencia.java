@@ -126,6 +126,20 @@ public class LLAdyacencia {
         visitado=new int[lista.length];
     }
 
+    public void agregarVector(){
+        NodoLLA[] nuevaLista=new NodoLLA[lista.length+1];
+        for (int i=1;i<lista.length;i++){
+            nuevaLista[i]=lista[i];
+        }
+        NodoLLA nodoLLA=new NodoLLA(lista.length,0);
+        nuevaLista[lista.length]=nodoLLA;
+        lista=nuevaLista;
+    }
+
+    public int tamanoGrafo(){
+        return lista.length;
+    }
+
 
 
 }

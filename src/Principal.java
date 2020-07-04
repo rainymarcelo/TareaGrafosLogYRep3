@@ -65,7 +65,7 @@ public class Principal {
                     break;
 
                 case "3"://recorre en DFS
-                    mostrar = "Seleccione el grado al cual quiere representar en DFS\n";
+                    mostrar = "Seleccione el grafo al cual quiere representar en DFS\n";
                     for (int i = 1; i < grafos.length; i++) {
                         if (grafos[i] != null) {
                             mostrar += "grafo #" + i + "\n" + grafos[i].mostrarGrafoMatriz() + "\n";
@@ -78,7 +78,7 @@ public class Principal {
                     break;
 
                 case "4"://recorre en BFS
-                    mostrar = "Seleccione el grado al cual quiere representar en DFS\n";
+                    mostrar = "Seleccione el grafo al cual quiere representar en DFS\n";
                     for (int i = 1; i < grafos.length; i++) {
                         if (grafos[i] != null) {
                             mostrar += "grafo #" + i + "\n" + grafos[i].mostrarGrafoMatriz() + "\n";
@@ -88,6 +88,37 @@ public class Principal {
                     String BFS=grafos[grafoBFS].BFSListasLigadaAdyacencia(1);//cambiar para que el usuario decida desde cual vector
                     JOptionPane.showMessageDialog(null,BFS);
                     grafos[grafoBFS].resetVisitados();
+                    break;
+
+                case "5":
+                    mostrar = "Seleccione el grafo al cual quiere agregar un vertice\n";
+                    for (int i = 1; i < grafos.length; i++) {
+                        if (grafos[i] != null) {
+                            mostrar += "grafo #" + i + "\n" + grafos[i].mostrarGrafoMatriz() + "\n";
+                        }
+                    }
+                    int agregarVertice = Integer.parseInt(JOptionPane.showInputDialog(mostrar));
+                    grafos[agregarVertice].agregarVector();
+                    JOptionPane.showMessageDialog(null,grafos[agregarVertice].mostrarGrafoMatriz());
+                    cantidadLados=Integer.parseInt(JOptionPane.showInputDialog("Cantidad de lados a ingresar"));
+                    tamano=grafos[agregarVertice].tamanoGrafo();
+                    for (int i = 1; i <= cantidadLados; i++) {
+                        String dato = JOptionPane.showInputDialog("ingrese el lado #" + i + " (separe los vertices de salida y llegada por una coma)");
+                        String[] lado = dato.split(",");
+                        if (lado.length<2){
+                            JOptionPane.showMessageDialog(null,"Escribio mal las coordenadas del lado");
+                            break;
+                        }
+                        int verticeSalida = Integer.parseInt(lado[0]);
+                        int verticeLLegada = Integer.parseInt(lado[1]);
+                        if (verticeLLegada > tamano || verticeSalida > tamano) {
+                            JOptionPane.showMessageDialog(null, "ingreso un lado invalido, uno de los vectores que lo conforman no existe en el grado");
+                            break;
+                        }
+                        grafos[agregarVertice].grafoNoDirigido(verticeSalida,verticeLLegada);
+                    }
+                    JOptionPane.showMessageDialog(null,grafos[agregarVertice].mostrarGrafoMatriz());
+
                     break;
             }
 
