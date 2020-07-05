@@ -1,3 +1,5 @@
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -5,7 +7,9 @@ public class Principal {
     public static void main(String[] args) {
 
         LLAdyacencia[] grafos = new LLAdyacencia[100];
+        LLAdyacencia[] grafosDirigidos=new LLAdyacencia[100];
         int kGrafos = 1;
+        int kGrafosDirigidos=1;
 
         String menu = "1. Construir grafo\n" +
                 "2. Mostrar el grafo como matriz (incluyendo los ceros) sin construir la matriz\n" +
@@ -30,47 +34,75 @@ public class Principal {
                     int escoger=Integer.parseInt(JOptionPane.showInputDialog("1. Grafo no dirigido\n" +
                             "2. Grafo dirigido"));
 
-                    do {
-                        switch (escoger){
-                            case 1:
+                    if (escoger==1){
+                        int tamano = Integer.parseInt(JOptionPane.showInputDialog("Ingrese la cantidad de vectores que posee el grafo:"));
+                        int cantidadLados = Integer.parseInt(JOptionPane.showInputDialog("Cantidad de lados a ingresar:"));
 
+                        LLAdyacencia listaLigada = new LLAdyacencia(tamano);
 
-                                escoger=100;
+                        for (int i = 1; i <= cantidadLados; i++) {
+                            String dato = JOptionPane.showInputDialog("ingrese el lado #" + i + " (separe los vertices de salida y llegada por una coma) \n" +
+                                    "ejemplo:1,2,25");
+                            String[] lado = dato.split(",");
+                            if (lado.length<3){
+                                JOptionPane.showMessageDialog(null,"Escribio mal las coordenadas del lado");
                                 break;
-
-                            case 2:
-
-                                escoger=100;
+                            }
+                            int verticeSalida = Integer.parseInt(lado[0]);
+                            int verticeLLegada = Integer.parseInt(lado[1]);
+                            int verticeValor= Integer.parseInt((lado[2]));
+                            if (verticeLLegada > tamano || verticeSalida > tamano) {
+                                JOptionPane.showMessageDialog(null, "ingreso un lado invalido, uno de los vectores que lo conforman no existe en el grado");
                                 break;
+                            }
+                            if (verticeValor<=0){
+                                JOptionPane.showMessageDialog(null,"el valor del vertice tiene que ser mayor a 0 ");
+                                break;
+                            }
+                            listaLigada.grafoNoDirigido(verticeSalida, verticeLLegada,verticeValor);
                         }
-
-                    }while (escoger!=100);
-
-                    int tamano = Integer.parseInt(JOptionPane.showInputDialog("Ingrese la cantidad de vectores que posee el grafo:"));
-                    int cantidadLados = Integer.parseInt(JOptionPane.showInputDialog("Cantidad de lados a ingresar:"));
-
-                    LLAdyacencia listaLigada = new LLAdyacencia(tamano);
-
-                    for (int i = 1; i <= cantidadLados; i++) {
-                        String dato = JOptionPane.showInputDialog("ingrese el lado #" + i + " (separe los vertices de salida y llegada por una coma) \n" +
-                                "ejemplo:1,2");
-                        String[] lado = dato.split(",");
-                        if (lado.length<2){
-                            JOptionPane.showMessageDialog(null,"Escribio mal las coordenadas del lado");
-                            break;
-                        }
-                        int verticeSalida = Integer.parseInt(lado[0]);
-                        int verticeLLegada = Integer.parseInt(lado[1]);
-                        if (verticeLLegada > tamano || verticeSalida > tamano) {
-                            JOptionPane.showMessageDialog(null, "ingreso un lado invalido, uno de los vectores que lo conforman no existe en el grado");
-                            break;
-                        }
-                        listaLigada.grafoNoDirigido(verticeSalida, verticeLLegada);
+                        grafos[kGrafos] = listaLigada;
+                        kGrafos++;
+                        JOptionPane.showMessageDialog(null, listaLigada.mostrarGrafoMatriz());
+                        break;
                     }
-                    grafos[kGrafos] = listaLigada;
-                    kGrafos++;
-                    JOptionPane.showMessageDialog(null, listaLigada.mostrarGrafoMatriz());
-                    break;
+                    if (escoger==2){
+                        int tamano = Integer.parseInt(JOptionPane.showInputDialog("Ingrese la cantidad de vectores que posee el grafo:"));
+                        int cantidadLados = Integer.parseInt(JOptionPane.showInputDialog("Cantidad de lados a ingresar:"));
+
+                        LLAdyacencia listaLigada = new LLAdyacencia(tamano);
+
+                        for (int i = 1; i <= cantidadLados; i++) {
+                            String dato = JOptionPane.showInputDialog("ingrese el lado #" + i + " (separe los vertices de salida,llegada y valor por una coma) \n" +
+                                    "ejemplo:1,2,25");
+                            String[] lado = dato.split(",");
+                            if (lado.length<3){
+                                JOptionPane.showMessageDialog(null,"Escribio mal las coordenadas del lado");
+                                break;
+                            }
+                            int verticeSalida = Integer.parseInt(lado[0]);
+                            int verticeLLegada = Integer.parseInt(lado[1]);
+                            int valorVertice=Integer.parseInt(lado[2]);
+                            if (verticeLLegada > tamano || verticeSalida > tamano) {
+                                JOptionPane.showMessageDialog(null, "ingreso un lado invalido, uno de los vectores que lo conforman no existe en el grado");
+                                break;
+                            }
+                            if (valorVertice<=0){
+                                JOptionPane.showMessageDialog(null,"el valor del vertice tiene que ser mayor a 0 ");
+                                break;
+                            }
+                            listaLigada.grafiDirigido(verticeSalida,verticeLLegada,valorVertice);
+                        }
+                        grafosDirigidos[kGrafosDirigidos] = listaLigada;
+                        kGrafosDirigidos++;
+                        JOptionPane.showMessageDialog(null, listaLigada.mostrarGrafoMatriz());
+                        break;
+                    }else {
+                        JOptionPane.showMessageDialog(null,"opcion incorrecta");
+                        break;
+                    }
+
+
 
 
                 case "2":
@@ -80,66 +112,186 @@ public class Principal {
                             mostrar += "grafo #" + i + "\n" + grafos[i].mostrarGrafoMatriz() + "\n";
                         }
                     }
+                    for (int i = 1; i < grafosDirigidos.length; i++) {
+                        if (grafosDirigidos[i] != null) {
+                            mostrar += "grafo dirigido #" + i + "\n" + grafosDirigidos[i].mostrarGrafoMatriz() + "\n";
+                        }
+                    }
                     JOptionPane.showMessageDialog(null, mostrar);
 
                     break;
 
                 case "3"://recorre en DFS
-                    mostrar = "Seleccione el grafo al cual quiere representar en DFS\n";
-                    for (int i = 1; i < grafos.length; i++) {
-                        if (grafos[i] != null) {
-                            mostrar += "grafo #" + i + "\n" + grafos[i].mostrarGrafoMatriz() + "\n";
+
+                    int opcionDFS=Integer.parseInt(JOptionPane.showInputDialog("Seleccione el tipo de grafo al cual va a recorre en DFS:\n" +
+                            "1. Grafo no dirigido\n"+
+                            "2. Grafo dirigido"));
+
+                    if (opcionDFS==1){
+                        mostrar = "Seleccione el grafo al cual quiere representar en DFS\n";
+                        for (int i = 1; i < grafos.length; i++) {
+                            if (grafos[i] != null) {
+                                mostrar += "grafo #" + i + "\n" + grafos[i].mostrarGrafoMatriz() + "\n";
+                            }
                         }
+                        int grafoDFS = Integer.parseInt(JOptionPane.showInputDialog(mostrar));
+                        int vectorInicial=Integer.parseInt(JOptionPane.showInputDialog("Ingrese el vector desde el cual se va a iniciar el recorrido DFS, tenga en cuenta que el grafo seleccionado tiene "+grafos[grafoDFS].tamanoGrafo()+"\n vectores"));
+                        if (vectorInicial>grafos[grafoDFS].tamanoGrafo()){
+                            JOptionPane.showMessageDialog(null,"ingreso un vector que no existe en el grafo");
+                            break;
+                        }
+                        String DFS=grafos[grafoDFS].DFSListaLigadaAdyacencia(vectorInicial);
+                        JOptionPane.showMessageDialog(null,DFS);
+                        grafos[grafoDFS].resetVisitados();
+                        break;
                     }
-                    int grafoDFS = Integer.parseInt(JOptionPane.showInputDialog(mostrar));
-                    String DFS=grafos[grafoDFS].DFSListaLigadaAdyacencia(1);//cambiar para que el usuario decida desde cual vector
-                    JOptionPane.showMessageDialog(null,DFS);
-                    grafos[grafoDFS].resetVisitados();
+                    if (opcionDFS==2){
+                        mostrar = "Seleccione el grafo dirigido al cual quiere representar en DFS\n";
+                        for (int i = 1; i < grafosDirigidos.length; i++) {
+                            if (grafosDirigidos[i] != null) {
+                                mostrar += "grafo dirigido #" + i + "\n" + grafosDirigidos[i].mostrarGrafoMatriz() + "\n";
+                            }
+                        }
+                        int grafoDFS = Integer.parseInt(JOptionPane.showInputDialog(mostrar));
+                        int vectorInicial=Integer.parseInt(JOptionPane.showInputDialog("Ingrese el vector desde el cual se va a iniciar el recorrido DFS, tenga en cuenta que el grafo seleccionado tiene "+grafosDirigidos[grafoDFS].tamanoGrafo()+"\n vectores"));
+                        if (vectorInicial>grafos[grafoDFS].tamanoGrafo()){
+                            JOptionPane.showMessageDialog(null,"ingreso un vector que no existe en el grafo");
+                            break;
+                        }
+                        String DFS=grafosDirigidos[grafoDFS].DFSListaLigadaAdyacencia(vectorInicial);
+                        JOptionPane.showMessageDialog(null,DFS);
+                        grafosDirigidos[grafoDFS].resetVisitados();
+                        break;
+                    }
+                    JOptionPane.showMessageDialog(null,"opcion incorrecta");
                     break;
+
 
                 case "4"://recorre en BFS
-                    mostrar = "Seleccione el grafo al cual quiere representar en DFS\n";
-                    for (int i = 1; i < grafos.length; i++) {
-                        if (grafos[i] != null) {
-                            mostrar += "grafo #" + i + "\n" + grafos[i].mostrarGrafoMatriz() + "\n";
+
+                    int opcionBFS=Integer.parseInt(JOptionPane.showInputDialog("Seleccione el tipo de grafo al cual va a recorre en DFS:\n" +
+                            "1. Grafo no dirigido\n"+
+                            "2. Grafo dirigido"));
+                    if (opcionBFS==1){
+                        mostrar = "Seleccione el grafo al cual quiere representar en BFS\n";
+                        for (int i = 1; i < grafos.length; i++) {
+                            if (grafos[i] != null) {
+                                mostrar += "grafo #" + i + "\n" + grafos[i].mostrarGrafoMatriz() + "\n";
+                            }
                         }
+                        int grafoBFS = Integer.parseInt(JOptionPane.showInputDialog(mostrar));
+                        int vectorInicial=Integer.parseInt(JOptionPane.showInputDialog("Ingrese el vector desde el cual se va a iniciar el recorrido BFS, tenga en cuenta que el grafo seleccionado tiene "+grafosDirigidos[grafoBFS].tamanoGrafo()+"\n vectores"));
+                        if (vectorInicial>grafos[grafoBFS].tamanoGrafo()){
+                            JOptionPane.showMessageDialog(null,"ingreso un vector que no existe en el grafo");
+                            break;
+                        }
+                        String BFS=grafos[grafoBFS].BFSListasLigadaAdyacencia(vectorInicial);//cambiar para que el usuario decida desde cual vector
+                        JOptionPane.showMessageDialog(null,BFS);
+                        grafos[grafoBFS].resetVisitados();
+                        break;
                     }
-                    int grafoBFS = Integer.parseInt(JOptionPane.showInputDialog(mostrar));
-                    String BFS=grafos[grafoBFS].BFSListasLigadaAdyacencia(1);//cambiar para que el usuario decida desde cual vector
-                    JOptionPane.showMessageDialog(null,BFS);
-                    grafos[grafoBFS].resetVisitados();
+                    if (opcionBFS==2){
+                        mostrar = "Seleccione el grafo dirigido al cual quiere representar en BFS\n";
+                        for (int i = 1; i < grafos.length; i++) {
+                            if (grafosDirigidos[i] != null) {
+                                mostrar += "grafo #" + i + "\n" + grafosDirigidos[i].mostrarGrafoMatriz() + "\n";
+                            }
+                        }
+                        int grafoBFS = Integer.parseInt(JOptionPane.showInputDialog(mostrar));
+                        int vectorInicial=Integer.parseInt(JOptionPane.showInputDialog("Ingrese el vector desde el cual se va a iniciar el recorrido BFS, tenga en cuenta que el grafo seleccionado tiene "+grafosDirigidos[grafoBFS].tamanoGrafo()+"\n vectores"));
+                        if (vectorInicial>grafos[grafoBFS].tamanoGrafo()){
+                            JOptionPane.showMessageDialog(null,"ingreso un vector que no existe en el grafo");
+                            break;
+                        }
+                        String BFS=grafosDirigidos[grafoBFS].BFSListasLigadaAdyacencia(vectorInicial);//cambiar para que el usuario decida desde cual vector
+                        JOptionPane.showMessageDialog(null,BFS);
+                        grafos[grafoBFS].resetVisitados();
+                        break;
+                    }
+                    JOptionPane.showMessageDialog(null,"opcion incorrecta");
                     break;
+
+
 
                 case "5"://añadir un vertice
-                    mostrar = "Seleccione el grafo al cual quiere agregar un vertice\n";
-                    for (int i = 1; i < grafos.length; i++) {
-                        if (grafos[i] != null) {
-                            mostrar += "grafo #" + i + "\n" + grafos[i].mostrarGrafoMatriz() + "\n";
-                        }
-                    }
-                    int agregarVertice = Integer.parseInt(JOptionPane.showInputDialog(mostrar));
-                    grafos[agregarVertice].agregarVector();
-                    JOptionPane.showMessageDialog(null,grafos[agregarVertice].mostrarGrafoMatriz());
-                    cantidadLados=Integer.parseInt(JOptionPane.showInputDialog("Cantidad de lados a ingresar"));
-                    tamano=grafos[agregarVertice].tamanoGrafo();
-                    for (int i = 1; i <= cantidadLados; i++) {
-                        String dato = JOptionPane.showInputDialog("ingrese el lado #" + i + " (separe los vertices de salida y llegada por una coma)");
-                        String[] lado = dato.split(",");
-                        if (lado.length<2){
-                            JOptionPane.showMessageDialog(null,"Escribio mal las coordenadas del lado");
-                            break;
-                        }
-                        int verticeSalida = Integer.parseInt(lado[0]);
-                        int verticeLLegada = Integer.parseInt(lado[1]);
-                        if (verticeLLegada > tamano || verticeSalida > tamano) {
-                            JOptionPane.showMessageDialog(null, "ingreso un lado invalido, uno de los vectores que lo conforman no existe en el grado");
-                            break;
-                        }
-                        grafos[agregarVertice].grafoNoDirigido(verticeSalida,verticeLLegada);
-                    }
-                    JOptionPane.showMessageDialog(null,grafos[agregarVertice].mostrarGrafoMatriz());
+                    int opcionAñadir=Integer.parseInt(JOptionPane.showInputDialog("Seleccione el tipo de grafo al cual va a añadir un vertice:\n" +
+                            "1. Grafo no dirigido\n"+
+                            "2. Grafo dirigido"));
 
+                    if (opcionAñadir==1){
+                        mostrar = "Seleccione el grafo al cual quiere agregar un vertice\n";
+                        for (int i = 1; i < grafos.length; i++) {
+                            if (grafos[i] != null) {
+                                mostrar += "grafo #" + i + "\n" + grafos[i].mostrarGrafoMatriz() + "\n";
+                            }
+                        }
+                        int agregarVertice = Integer.parseInt(JOptionPane.showInputDialog(mostrar));
+                        grafos[agregarVertice].agregarVector();
+                        JOptionPane.showMessageDialog(null,grafos[agregarVertice].mostrarGrafoMatriz());
+                        int cantidadLados=Integer.parseInt(JOptionPane.showInputDialog("Cantidad de lados a ingresar"));
+                        int tamano=grafos[agregarVertice].tamanoGrafo();
+                        for (int i = 1; i <= cantidadLados; i++) {
+                            String dato = JOptionPane.showInputDialog("ingrese el lado #" + i + " (separe los vertices de salida,llegada  y valor por una coma)");
+                            String[] lado = dato.split(",");
+                            if (lado.length<3){
+                                JOptionPane.showMessageDialog(null,"Escribio mal las coordenadas del lado");
+                                break;
+                            }
+                            int verticeSalida = Integer.parseInt(lado[0]);
+                            int verticeLLegada = Integer.parseInt(lado[1]);
+                            int verticeValor=Integer.parseInt(lado[2]);
+                            if (verticeLLegada > tamano || verticeSalida > tamano) {
+                                JOptionPane.showMessageDialog(null, "ingreso un lado invalido, uno de los vectores que lo conforman no existe en el grado");
+                                break;
+                            }
+                            if (verticeValor<=0){
+                                JOptionPane.showMessageDialog(null,"el valor del vertice tiene que ser mayor a 0 ");
+                                break;
+                            }
+                            grafos[agregarVertice].grafoNoDirigido(verticeSalida,verticeLLegada,verticeValor);
+                        }
+                        JOptionPane.showMessageDialog(null,grafos[agregarVertice].mostrarGrafoMatriz());
+                        break;
+                    }
+                    if (opcionAñadir==2){
+                        mostrar = "Seleccione el grafo dirigido al cual quiere agregar un vertice\n";
+                        for (int i = 1; i < grafos.length; i++) {
+                            if (grafosDirigidos[i] != null) {
+                                mostrar += "grafo #" + i + "\n" + grafosDirigidos[i].mostrarGrafoMatriz() + "\n";
+                            }
+                        }
+                        int agregarVertice = Integer.parseInt(JOptionPane.showInputDialog(mostrar));
+                        grafosDirigidos[agregarVertice].agregarVector();
+                        JOptionPane.showMessageDialog(null,grafosDirigidos[agregarVertice].mostrarGrafoMatriz());
+                        int cantidadLados=Integer.parseInt(JOptionPane.showInputDialog("Cantidad de lados a ingresar"));
+                        int tamano=grafosDirigidos[agregarVertice].tamanoGrafo();
+                        for (int i = 1; i <= cantidadLados; i++) {
+                            String dato = JOptionPane.showInputDialog("ingrese el lado #" + i + " (separe los vertices de salida, llegada y valor por una coma)\n" +
+                                    "ejemplo:1,2,25" );
+                            String[] lado = dato.split(",");
+                            if (lado.length<3){
+                                JOptionPane.showMessageDialog(null,"Escribio mal las coordenadas del lado");
+                                break;
+                            }
+                            int verticeSalida = Integer.parseInt(lado[0]);
+                            int verticeLLegada = Integer.parseInt(lado[1]);
+                            int verticeVolar=Integer.parseInt(lado[2]);
+                            if (verticeLLegada > tamano || verticeSalida > tamano) {
+                                JOptionPane.showMessageDialog(null, "ingreso un lado invalido, uno de los vectores que lo conforman no existe en el grado");
+                                break;
+                            }
+                            if (verticeVolar<=0){
+                                JOptionPane.showMessageDialog(null, "ingreso valor igual o menor a cero por lo cual el lado es invalido");
+                                break;
+                            }
+                            grafosDirigidos[agregarVertice].grafiDirigido(verticeSalida,verticeLLegada,verticeVolar);
+                        }
+                        JOptionPane.showMessageDialog(null,grafos[agregarVertice].mostrarGrafoMatriz());
+                        break;
+                    }
+                    JOptionPane.showMessageDialog(null,"opcion incorrecta");
                     break;
+
 
                 case"6"://eliminar vertice
                     mostrar = "Seleccione el grafo al cual quiere agregar un vertice\n";
@@ -190,7 +342,33 @@ public class Principal {
                     break;
 
                 case"8"://construir y mostrar el spaning tree
+                    int opcionKruskal=Integer.parseInt(JOptionPane.showInputDialog("Seleccione el tipo de grafo al cual va a añadir un vertice:\n" +
+                            "1. Grafo no dirigido\n"+
+                            "2. Grafo dirigido"));
 
+                    if (opcionKruskal==1){
+                        mostrar = "Seleccione el grafo al cual quiere hallar el spanning tree\n";
+                        for (int i = 1; i < grafos.length; i++) {
+                            if (grafos[i] != null) {
+                                mostrar += "grafo #" + i + "\n" + grafos[i].mostrarGrafoMatriz() + "\n";
+                            }
+                        }
+                        int agregarVertice = Integer.parseInt(JOptionPane.showInputDialog(mostrar));
+
+
+
+                    }
+                    if (opcionKruskal==2){
+                        mostrar = "Seleccione el grafo dirigido al cual quiere hallar el spanning tree\n";
+                        for (int i = 1; i < grafos.length; i++) {
+                            if (grafosDirigidos[i] != null) {
+                                mostrar += "grafo #" + i + "\n" + grafosDirigidos[i].mostrarGrafoMatriz() + "\n";
+                            }
+                        }
+                        int agregarVertice = Integer.parseInt(JOptionPane.showInputDialog(mostrar));
+
+                    }
+                    JOptionPane.showMessageDialog(null,"opcion incorrecta");
                     break;
 
                 case "9":

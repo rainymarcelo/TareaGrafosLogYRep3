@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class LLAdyacencia {
 
     private NodoLLA[] lista;
@@ -36,13 +39,13 @@ public class LLAdyacencia {
                 }
             }
         }
-    }
+    }//funciona
 
-    public void grafoNoDirigido(int salida,int llegada){
-        NodoLLA nodoSalida=new NodoLLA(llegada,1);
+    public void grafoNoDirigido(int salida,int llegada,int valor){
+        NodoLLA nodoSalida=new NodoLLA(llegada,valor);
         if (lista[salida].getLiga()==null){
             lista[salida].setLiga(nodoSalida);
-            grafoNoDirigido(llegada,salida);
+            grafoNoDirigido(llegada,salida,valor);
         }
         else {
             NodoLLA q=lista[salida];
@@ -51,7 +54,7 @@ public class LLAdyacencia {
                 if (llegada<p.getVertice()){
                     q.setLiga(nodoSalida);
                     nodoSalida.setLiga(p);
-                    grafoNoDirigido(llegada,salida);
+                    grafoNoDirigido(llegada,salida,valor);
                     return;
                 }
                 if (llegada==p.getVertice()){
@@ -59,7 +62,7 @@ public class LLAdyacencia {
                 }
                 if (p.getLiga()==null){
                     p.setLiga(nodoSalida);
-                    grafoNoDirigido(llegada,salida);
+                    grafoNoDirigido(llegada,salida,valor);
                     return;
                 }
                 q=p;
@@ -83,7 +86,7 @@ public class LLAdyacencia {
             grafo+="\n";
         }
         return grafo;
-    }//funciona con no dirigidos
+    }//funciona
 
     public String DFSListaLigadaAdyacencia(int vector){
         String listaDFS =" "+vector;
@@ -174,5 +177,6 @@ public class LLAdyacencia {
             p=p.getLiga();
         }
     }
+
 
 }
