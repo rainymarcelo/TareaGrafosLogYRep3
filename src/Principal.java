@@ -356,6 +356,8 @@ public class Principal {
                         int agregarVertice = Integer.parseInt(JOptionPane.showInputDialog(mostrar));
 
 
+                        JOptionPane.showMessageDialog(null,grafos[agregarVertice].Kruskal());
+                        break;
 
                     }
                     if (opcionKruskal==2){

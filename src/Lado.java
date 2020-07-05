@@ -1,12 +1,10 @@
 public class Lado {
     private int salida,llegada,valor;
-    private Lado lado;
 
-    public Lado(int salida, int llegada, int valor, Lado lado) {
+    public Lado(int salida, int llegada, int valor) {
         this.salida = salida;
         this.llegada = llegada;
         this.valor = valor;
-        this.lado = lado;
     }
 
     public int getSalida() {
@@ -31,13 +29,5 @@ public class Lado {
 
     public void setValor(int valor) {
         this.valor = valor;
-    }
-
-    public Lado getLado() {
-        return lado;
-    }
-
-    public void setLado(Lado lado) {
-        this.lado = lado;
     }
 }
