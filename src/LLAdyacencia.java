@@ -177,14 +177,14 @@ public class LLAdyacencia {
     }
 
     public String Kruskal() {
-        List<int[]> s2=new ArrayList<>();
-        for (int i=0;i<tamanoGrafo();i++){
-            int[] t=new int[tamanoGrafo()];
-            for (int j=0;j<tamanoGrafo();j++){
-                if (i==j){
-                    t[j]=j;
-                }else {
-                    t[j]=0;
+        List<int[]> s2 = new ArrayList<>();
+        for (int i = 0; i < tamanoGrafo(); i++) {
+            int[] t = new int[tamanoGrafo()];
+            for (int j = 0; j < tamanoGrafo(); j++) {
+                if (i == j) {
+                    t[j] = j;
+                } else {
+                    t[j] = 0;
                 }
             }
             s2.add(t);
@@ -199,18 +199,18 @@ public class LLAdyacencia {
             int w = p.getLlegada();
             int i = s2.get(v)[w];
             int j = s2.get(w)[v];
-            if (i != j || i+j==0 ) {
+            if (i != j || i + j == 0) {
                 if (i == 0 && j == 0) {
                     kruska += "(" + v + "," + w + "),";
-                    s2.get(v)[v]=v;
-                    s2.get(v)[w]=w;
-                    for (int n=1;n<tamanoGrafo();n++){
-                        if (s2.get(w)[n]!=0){
-                            s2.get(v)[n]=s2.get(w)[n];
+                    s2.get(v)[v] = v;
+                    s2.get(v)[w] = w;
+                    for (int n = 1; n < tamanoGrafo(); n++) {
+                        if (s2.get(w)[n] != 0) {
+                            s2.get(v)[n] = s2.get(w)[n];
                         }
                     }
-                    for (int n=1;n<tamanoGrafo();n++){
-                        s2.set(w,s2.get(v));
+                    for (int n = 1; n < tamanoGrafo(); n++) {
+                        s2.set(w, s2.get(v));
                     }
                     k = k + 1;
                 }
@@ -219,6 +219,31 @@ public class LLAdyacencia {
         }
         kruska += "}";
         return kruska;
+    }
+
+    public boolean arbolLibre() {
+        for (int i = 1; i < tamanoGrafo(); i++) {
+            int[] fila = new int[tamanoGrafo()];
+            NodoLLA p = lista[i].getLiga();
+            while (p != null) {
+                fila[p.getVertice()] = p.getVertice();
+                p = p.getLiga();
+            }
+            for (int j = 1; j < tamanoGrafo(); j++) {
+                if (j!=i){
+                    int[] fila2=new int[tamanoGrafo()];
+                    NodoLLA q = lista[j].getLiga();
+                    while (q != null) {
+                        if (q.getVertice() == i && fila[j] != j) {
+                            return false;
+                        }
+                        fila2[j]=q.getVertice();
+                        q = q.getLiga();
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     private Lado[] organizarPorValor() {

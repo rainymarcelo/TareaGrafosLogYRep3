@@ -20,7 +20,7 @@ public class Principal {
                 "7. Eliminar un lado del grafo\n" +
                 "8. Construir y mostrar el spanning tree\n" +
                 "9. Determinar si es un árbol libre\n" +
-                "10. Determinar si tiene puntos de articulación o no. En caso de que tenga mostrar cuáles son.\n" +
+                "10. Determinar si tiene puntos de articulación o no. En caso de que tenga mostrar cuáles son.(no funciona)\n" +
                 "11. Salir";
 
         String opcion1 = "";
@@ -135,8 +135,8 @@ public class Principal {
                             }
                         }
                         int grafoDFS = Integer.parseInt(JOptionPane.showInputDialog(mostrar));
-                        int vectorInicial=Integer.parseInt(JOptionPane.showInputDialog("Ingrese el vector desde el cual se va a iniciar el recorrido DFS, tenga en cuenta que el grafo seleccionado tiene "+grafos[grafoDFS].tamanoGrafo()+"\n vectores"));
-                        if (vectorInicial>grafos[grafoDFS].tamanoGrafo()){
+                        int vectorInicial=Integer.parseInt(JOptionPane.showInputDialog("Ingrese el vector desde el cual se va a iniciar el recorrido DFS, tenga en cuenta que el grafo seleccionado tiene "+(grafos[grafoDFS].tamanoGrafo()-1)+"\n vectores"));
+                        if (vectorInicial>grafos[grafoDFS].tamanoGrafo()-1){
                             JOptionPane.showMessageDialog(null,"ingreso un vector que no existe en el grafo");
                             break;
                         }
@@ -154,7 +154,7 @@ public class Principal {
                         }
                         int grafoDFS = Integer.parseInt(JOptionPane.showInputDialog(mostrar));
                         int vectorInicial=Integer.parseInt(JOptionPane.showInputDialog("Ingrese el vector desde el cual se va a iniciar el recorrido DFS, tenga en cuenta que el grafo seleccionado tiene "+grafosDirigidos[grafoDFS].tamanoGrafo()+"\n vectores"));
-                        if (vectorInicial>grafos[grafoDFS].tamanoGrafo()){
+                        if (vectorInicial>grafos[grafoDFS].tamanoGrafo()-1){
                             JOptionPane.showMessageDialog(null,"ingreso un vector que no existe en el grafo");
                             break;
                         }
@@ -180,26 +180,27 @@ public class Principal {
                             }
                         }
                         int grafoBFS = Integer.parseInt(JOptionPane.showInputDialog(mostrar));
-                        int vectorInicial=Integer.parseInt(JOptionPane.showInputDialog("Ingrese el vector desde el cual se va a iniciar el recorrido BFS, tenga en cuenta que el grafo seleccionado tiene "+grafosDirigidos[grafoBFS].tamanoGrafo()+"\n vectores"));
-                        if (vectorInicial>grafos[grafoBFS].tamanoGrafo()){
+                        String vectorInicial=JOptionPane.showInputDialog("Ingrese el vector desde el cual se va a iniciar el recorrido BFS, tenga en cuenta que el grafo seleccionado tiene "+(grafos[grafoBFS].tamanoGrafo()-1)+"\n vectores");
+                        int firtvector= Integer.parseInt(vectorInicial);
+                        if (firtvector>grafos[grafoBFS].tamanoGrafo()-1){
                             JOptionPane.showMessageDialog(null,"ingreso un vector que no existe en el grafo");
                             break;
                         }
-                        String BFS=grafos[grafoBFS].BFSListasLigadaAdyacencia(vectorInicial);//cambiar para que el usuario decida desde cual vector
+                        String BFS=grafos[grafoBFS].BFSListasLigadaAdyacencia(firtvector);//cambiar para que el usuario decida desde cual vector
                         JOptionPane.showMessageDialog(null,BFS);
                         grafos[grafoBFS].resetVisitados();
                         break;
                     }
                     if (opcionBFS==2){
                         mostrar = "Seleccione el grafo dirigido al cual quiere representar en BFS\n";
-                        for (int i = 1; i < grafos.length; i++) {
+                        for (int i = 1; i < grafosDirigidos.length; i++) {
                             if (grafosDirigidos[i] != null) {
                                 mostrar += "grafo #" + i + "\n" + grafosDirigidos[i].mostrarGrafoMatriz() + "\n";
                             }
                         }
                         int grafoBFS = Integer.parseInt(JOptionPane.showInputDialog(mostrar));
                         int vectorInicial=Integer.parseInt(JOptionPane.showInputDialog("Ingrese el vector desde el cual se va a iniciar el recorrido BFS, tenga en cuenta que el grafo seleccionado tiene "+grafosDirigidos[grafoBFS].tamanoGrafo()+"\n vectores"));
-                        if (vectorInicial>grafos[grafoBFS].tamanoGrafo()){
+                        if (vectorInicial>grafosDirigidos[grafoBFS].tamanoGrafo()){
                             JOptionPane.showMessageDialog(null,"ingreso un vector que no existe en el grafo");
                             break;
                         }
@@ -368,15 +369,35 @@ public class Principal {
                             }
                         }
                         int agregarVertice = Integer.parseInt(JOptionPane.showInputDialog(mostrar));
+                        JOptionPane.showMessageDialog(null,grafosDirigidos[agregarVertice].Kruskal());
 
                     }
                     JOptionPane.showMessageDialog(null,"opcion incorrecta");
                     break;
 
-                case "9":
+                case "9"://determinar si es un arbol libre
+                    mostrar = "Seleccione el grafo al cual va a evaluar si es un arbol libre\n";
+                    for (int i = 1; i < grafos.length; i++) {
+                        if (grafos[i] != null) {
+                            mostrar += "grafo #" + i + "\n" + grafos[i].mostrarGrafoMatriz() + "\n";
+                        }
+                    }
+                    int seleccion=Integer.parseInt(JOptionPane.showInputDialog(mostrar));
+                    String DFSContinuo=grafos[seleccion].DFSListaLigadaAdyacencia(1);
+                    String[] continuo=DFSContinuo.split(" ");
+                    if ((continuo.length-1)!=(grafos[seleccion].tamanoGrafo()-1)){
+                        JOptionPane.showMessageDialog(null,"El grafo no es continuo por lo que no es un arbol libre");
+                        break;
+                    }
+                    boolean confirmacion=grafos[seleccion].arbolLibre();
+                    if (confirmacion==false){
+                        JOptionPane.showMessageDialog(null,"El grafo tiene ciclos por lo que no es un arbol libre");
+                        break;
+                    }
+                    JOptionPane.showMessageDialog(null,"El grafo es un arbol libre");
                     break;
 
-                case "10":
+                case "10"://determinar si tiene articulacion y demostrar
                     break;
 
                 case "11":
