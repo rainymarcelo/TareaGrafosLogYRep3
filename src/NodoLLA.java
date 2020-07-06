@@ -1,4 +1,6 @@
 public class NodoLLA {
+    /*  MARCELO DE LA HOZ SIERRA CC 1037669479
+     */
     int vertice,valor;
     NodoLLA liga=null;
 

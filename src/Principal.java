@@ -5,6 +5,8 @@ import java.awt.*;
 
 public class Principal {
     public static void main(String[] args) {
+        /*  MARCELO DE LA HOZ SIERRA CC 1037669479
+         */
 
         LLAdyacencia[] grafos = new LLAdyacencia[100];
         LLAdyacencia[] grafosDirigidos=new LLAdyacencia[100];
@@ -232,7 +234,7 @@ public class Principal {
                         int cantidadLados=Integer.parseInt(JOptionPane.showInputDialog("Cantidad de lados a ingresar"));
                         int tamano=grafos[agregarVertice].tamanoGrafo();
                         for (int i = 1; i <= cantidadLados; i++) {
-                            String dato = JOptionPane.showInputDialog("ingrese el lado #" + i + " (separe los vertices de salida,llegada  y valor por una coma)");
+                            String dato = JOptionPane.showInputDialog("ingrese el lado #" + i + " (separe los vertices de salida,llegada y valor por una coma)");
                             String[] lado = dato.split(",");
                             if (lado.length<3){
                                 JOptionPane.showMessageDialog(null,"Escribio mal las coordenadas del lado");
@@ -295,7 +297,7 @@ public class Principal {
 
 
                 case"6"://eliminar vertice
-                    mostrar = "Seleccione el grafo al cual quiere agregar un vertice\n";
+                    mostrar = "Seleccione el grafo al cual quiere eliminar un vertice\n";
                     for (int i = 1; i < grafos.length; i++) {
                         if (grafos[i] != null) {
                             mostrar += "grafo #" + i + "\n" + grafos[i].mostrarGrafoMatriz() + "\n";
@@ -309,14 +311,16 @@ public class Principal {
                         break;
                     }
 
-                    grafos[eliminarVertice].eliminarVector(vectirEliminado);
+                    LLAdyacencia eliminadoVector=grafos[eliminarVertice].eliminarVector(vectirEliminado);
 
-                    JOptionPane.showMessageDialog(null,grafos[eliminarVertice].mostrarGrafoMatriz());
+                    JOptionPane.showMessageDialog(null,eliminadoVector.mostrarGrafoMatriz());
+
+                    grafos[eliminarVertice]=eliminadoVector;
 
                     break;
 
                 case"7"://eliminar lado
-                    mostrar = "Seleccione el grafo al cual quiere agregar un vertice\n";
+                    mostrar = "Seleccione el grafo al cual quiere eliminar un lado\n";
                     for (int i = 1; i < grafos.length; i++) {
                         if (grafos[i] != null) {
                             mostrar += "grafo #" + i + "\n" + grafos[i].mostrarGrafoMatriz() + "\n";

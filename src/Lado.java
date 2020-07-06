@@ -1,4 +1,6 @@
 public class Lado {
+    /*  MARCELO DE LA HOZ SIERRA CC 1037669479
+     */
     private int salida,llegada,valor;
 
     public Lado(int salida, int llegada, int valor) {

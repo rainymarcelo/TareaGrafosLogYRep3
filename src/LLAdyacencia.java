@@ -2,9 +2,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LLAdyacencia {
+    /*  MARCELO DE LA HOZ SIERRA CC 1037669479
+     */
 
     private NodoLLA[] lista;
     private int[] visitado;
+
+    public  LLAdyacencia(NodoLLA[] vector){
+        lista=vector;
+    }
 
     public LLAdyacencia(int vectores) {
         lista = new NodoLLA[vectores + 1];
@@ -141,7 +147,7 @@ public class LLAdyacencia {
         return lista.length;
     }
 
-    public void eliminarVector(int vector) {
+    public LLAdyacencia eliminarVector(int vector) {
         NodoLLA[] nuevaLista = new NodoLLA[lista.length - 1];
         int k = 1;
         for (int i = 1; i < lista.length; i++) {
@@ -152,6 +158,9 @@ public class LLAdyacencia {
                     if (p.getVertice() == vector) {
                         q.setLiga(p.getLiga());
                     }
+                    if (p.getVertice()>vector){
+                        p.setVertice(p.getVertice()-1);
+                    }
                     q = p;
                     p = p.getLiga();
                 }
@@ -159,7 +168,8 @@ public class LLAdyacencia {
                 k++;
             }
         }
-        lista = nuevaLista;
+        LLAdyacencia llAdyacencia=new LLAdyacencia(nuevaLista);
+        return llAdyacencia;
     }
 
     public void eliminarLadoNoDirigido(int salida, int llegada) {
